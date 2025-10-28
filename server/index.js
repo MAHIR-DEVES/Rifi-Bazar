@@ -8,11 +8,11 @@ const port = process.env.PORT || 5000;
 
 // ✅ Allow Specific Origins
 const allowedOrigins = [
-  'http://localhost:5173', // local frontend
-  'https://rifi-bazar.vercel.app', // live frontend
+  'http://localhost:5173', // Local frontend
+  'https://rifi-bazar.vercel.app', // Live frontend
 ];
 
-// ✅ CORS Setup
+// ✅ Proper CORS Setup (only once)
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -27,11 +27,10 @@ app.use(
   })
 );
 
-// Middleware
-app.use(cors());
+// ✅ Middleware
 app.use(express.json());
 
-// MongoDB Connection
+// ✅ MongoDB Connection
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.csfnsag.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const client = new MongoClient(uri, {
   serverApi: {
@@ -43,7 +42,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // await client.connect();
     console.log('✅ MongoDB connected successfully');
 
     const db = client.db('DateMolassesDB');
@@ -55,7 +53,7 @@ async function run() {
 
     // Test route
     app.get('/', (req, res) => {
-      res.send('🚀 Chashma Express BD Server is running fine!');
+      res.send('🚀 Rifi Bazar Server is running fine!');
     });
 
     // Save a product
@@ -71,7 +69,7 @@ async function run() {
       }
     });
 
-    // Get all products with optional search
+    // Get all products (with optional search)
     app.get('/get-products', async (req, res) => {
       try {
         const search = req.query.search;
@@ -83,7 +81,7 @@ async function run() {
 
         const result = await productCollection
           .find(query)
-          .sort({ createdAt: -1 }) // 👈 latest product first
+          .sort({ createdAt: -1 })
           .toArray();
 
         res.send(result);
@@ -130,9 +128,10 @@ async function run() {
         const order = req.body;
         order.createdAt = new Date();
         const result = await ordersCollection.insertOne(order);
-        res
-          .status(201)
-          .json({ message: 'Order saved successfully', id: result.insertedId });
+        res.status(201).json({
+          message: 'Order saved successfully',
+          id: result.insertedId,
+        });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
@@ -143,9 +142,8 @@ async function run() {
       try {
         const result = await ordersCollection
           .find()
-          .sort({ createdAt: -1 }) // 👈 latest orders first
+          .sort({ createdAt: -1 })
           .toArray();
-
         res.json(result);
       } catch (error) {
         res.status(500).json({ error: 'Server error' });
@@ -177,7 +175,6 @@ async function run() {
       try {
         const { email, password } = req.body;
 
-        // 1. User খুঁজুন
         const user = await usersCollection.findOne({ email });
 
         if (!user) {
@@ -186,21 +183,18 @@ async function run() {
             .json({ success: false, message: 'User not found' });
         }
 
-        // 2. Password match check করুন (এখন simple match, পরে bcrypt করব)
         if (user.password !== password) {
           return res
             .status(401)
             .json({ success: false, message: 'Invalid password' });
         }
 
-        // 3. Role check করুন
         if (user.role !== 'admin') {
           return res
             .status(403)
             .json({ success: false, message: 'Not authorized' });
         }
 
-        // 4. Success হলে response পাঠান
         res.json({
           success: true,
           message: 'Admin login successful',
@@ -220,19 +214,17 @@ async function run() {
       }
     });
 
-    // Ping MongoDB to confirm connection
-    // await client.db('admin').command({ ping: 1 });
-    console.log('🏓 Pinged MongoDB successfully!');
+    console.log('🏓 MongoDB ready!');
   } catch (err) {
     console.error('❌ MongoDB connection failed:', err);
-    // setTimeout(run, 5000); // Retry after 5 seconds
   }
 }
 
-// Run the connection
 run();
 
-// Start server
+// ✅ Start server
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
 });
+
+module.exports = app;
