@@ -50,7 +50,7 @@ const OrderTable = ({ order, setOrders }) => {
     if (newStatus === 'all') return; // skip if "Select Status"
     try {
       await axios.patch(
-        `https://tech-bazar-iota.vercel.app/update-order/${order._id}`,
+        `https://rifi-bazar.vercel.app/update-order/${order._id}`,
         {
           status: newStatus,
         }
@@ -74,8 +74,8 @@ const OrderTable = ({ order, setOrders }) => {
         <div className="relative group">
           <div className="w-14 h-14 bg-gray-50 rounded-md overflow-hidden border border-gray-200 flex items-center justify-center shadow-sm">
             <img
-              src={order.productImage}
-              alt={order.productName || 'Product'}
+              src={order.product.image}
+              alt={order?.product?.title || 'Product'}
               className="w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-200"
               onError={e => {
                 e.target.src =
@@ -84,9 +84,9 @@ const OrderTable = ({ order, setOrders }) => {
             />
           </div>
           {/* Tooltip on hover */}
-          {order.productName && (
+          {order?.product?.title && (
             <div className="absolute hidden group-hover:block z-10 bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded-md whitespace-nowrap">
-              {order.productName}
+              {order?.product?.title}
             </div>
           )}
         </div>
@@ -94,14 +94,14 @@ const OrderTable = ({ order, setOrders }) => {
       <td className="px-6 py-4 whitespace-nowrap">
         <div>
           <div className="text-sm font-medium text-gray-900">
-            {order.userName}
+            {order?.customer?.name}
           </div>
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div>
           <div className="text-sm font-medium text-gray-900">
-            {order.userAddress}
+            {order?.customer?.address}
           </div>
         </div>
       </td>
@@ -109,10 +109,10 @@ const OrderTable = ({ order, setOrders }) => {
         {new Date(order.createdAt).toLocaleDateString()}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-        ৳{(Number(order.price) + 120).toLocaleString()}
+        {(Number(order?.product?.price) + 120).toLocaleString()} Tk
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-        {order.userPhone}
+        {order?.customer?.phone}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         {getStatusBadge(order.status)}

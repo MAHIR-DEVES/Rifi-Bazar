@@ -27,6 +27,7 @@ const Home = () => {
     {
       id: 1,
       title: 'Premium Organic Honey',
+      combo: false,
       author: 'Nature Harvest Farm',
       price: 149,
       originalPrice: 19.99,
@@ -53,6 +54,7 @@ const Home = () => {
     {
       id: 2,
       title: 'Premium Basmati Rice',
+      combo: false,
       author: 'Golden Grain Mills',
       price: 2289,
       originalPrice: 24.99,
@@ -79,6 +81,7 @@ const Home = () => {
     {
       id: 3,
       title: 'Pure Ghee (Deshi)',
+      combo: false,
       author: 'Shuddho Dairy',
       price: 229,
       originalPrice: 29.99,
@@ -104,6 +107,7 @@ const Home = () => {
     },
     {
       id: 4,
+      combo: false,
       title: 'Premium Basmati Rice',
       author: 'Golden Grain Mills',
       price: 189,
@@ -130,6 +134,7 @@ const Home = () => {
     },
     {
       id: 5,
+      combo: true,
       title: 'Pure Ghee (Deshi)',
       author: 'Shuddho Dairy',
       price: 229,
@@ -157,6 +162,7 @@ const Home = () => {
     {
       id: 6,
       title: 'Pure Ghee (Deshi)',
+      combo: true,
       author: 'Shuddho Dairy',
       price: 229,
       originalPrice: 29.99,

@@ -171,40 +171,32 @@ async function run() {
     });
 
     // Admin login (from DB)
+    // Load environment variables
+
     app.post('/admin-login', async (req, res) => {
       try {
         const { email, password } = req.body;
 
-        const user = await usersCollection.findOne({ email });
-
-        if (!user) {
-          return res
-            .status(401)
-            .json({ success: false, message: 'User not found' });
+        // ✅ Compare with .env values
+        if (
+          email === process.env.ADMIN_EMAIL &&
+          password === process.env.ADMIN_PASSWORD
+        ) {
+          return res.json({
+            success: true,
+            message: 'Admin login successful',
+            user: {
+              name: 'Super Admin',
+              email: process.env.ADMIN_EMAIL,
+              role: 'admin',
+            },
+          });
+        } else {
+          return res.status(401).json({
+            success: false,
+            message: 'Invalid admin credentials',
+          });
         }
-
-        if (user.password !== password) {
-          return res
-            .status(401)
-            .json({ success: false, message: 'Invalid password' });
-        }
-
-        if (user.role !== 'admin') {
-          return res
-            .status(403)
-            .json({ success: false, message: 'Not authorized' });
-        }
-
-        res.json({
-          success: true,
-          message: 'Admin login successful',
-          user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-          },
-        });
       } catch (error) {
         res.status(500).json({
           success: false,

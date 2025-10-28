@@ -87,39 +87,39 @@ const AddProduct = () => {
     }));
   };
 
-  const handleImageUpload = async e => {
-    const file = e.target.files[0];
-    if (!file) return;
+  // const handleImageUpload = async e => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
 
-    const data = new FormData();
-    data.append('file', file);
-    data.append('upload_preset', 'Tech_Bazar');
+  //   const data = new FormData();
+  //   data.append('file', file);
+  //   data.append('upload_preset', 'Tech_Bazar');
 
-    try {
-      const res = await fetch(
-        'https://api.cloudinary.com/v1_1/dkfxcjixb/image/upload',
-        {
-          method: 'POST',
-          body: data,
-        }
-      );
+  //   try {
+  //     const res = await fetch(
+  //       'https://api.cloudinary.com/v1_1/dkfxcjixb/image/upload',
+  //       {
+  //         method: 'POST',
+  //         body: data,
+  //       }
+  //     );
 
-      const urlData = await res.json();
+  //     const urlData = await res.json();
 
-      if (urlData.secure_url) {
-        // images state update
-        setProductData(prev => ({
-          ...prev,
-          images: [...prev.images, urlData.secure_url],
-        }));
+  //     if (urlData.secure_url) {
+  //       // images state update
+  //       setProductData(prev => ({
+  //         ...prev,
+  //         images: [...prev.images, urlData.secure_url],
+  //       }));
 
-        // for image preview
-        setImagePreviews(prev => [...prev, urlData.secure_url]);
-      }
-    } catch (err) {
-      console.error('Upload failed', err);
-    }
-  };
+  //       // for image preview
+  //       setImagePreviews(prev => [...prev, urlData.secure_url]);
+  //     }
+  //   } catch (err) {
+  //     console.error('Upload failed', err);
+  //   }
+  // };
 
   const removeImage = index => {
     const newPreviews = imagePreviews.filter((_, i) => i !== index);
@@ -134,46 +134,48 @@ const AddProduct = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const finalData = {
-      ...productData,
-      createdAt: new Date().toISOString(),
-    };
+    alert('This feature is disabled for demo purposes.');
+    // const finalData = {
+    //   ...productData,
+    //   createdAt: new Date().toISOString(),
+    // };
 
-    try {
-      const res = await fetch('https://tech-bazar-iota.vercel.app/products', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(finalData),
-      });
+    // try {
+    //   const res = await fetch('https://tech-bazar-iota.vercel.app/products', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(finalData),
+    //   });
 
-      if (res.ok) {
-        Swal.fire({
-          title: 'Drag me!',
-          icon: 'success',
-          draggable: true,
-        });
+    //   if (res.ok) {
+    //     Swal.fire({
+    //       title: 'Drag me!',
+    //       icon: 'success',
+    //       draggable: true,
+    //     });
 
-        setProductData({
-          name: '',
-          category: '',
-          price: '',
-          discountPrice: '',
-          stock: '',
-          description: '',
-          brand: '',
-          sku: '',
-          warranty: '',
-          specifications: [''],
-          images: [],
-        });
-        setImagePreviews([]);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Something went wrong!');
-    }
+    //   alert('Product added successfully!');
+    //     setProductData({
+    //       name: '',
+    //       category: '',
+    //       price: '',
+    //       discountPrice: '',
+    //       stock: '',
+    //       description: '',
+    //       brand: '',
+    //       sku: '',
+    //       warranty: '',
+    //       specifications: [''],
+    //       images: [],
+    //     });
+    //     setImagePreviews([]);
+    //   }
+    // } catch (error) {
+    //   console.error('Error:', error);
+    //   alert('Something went wrong!');
+    // }
   };
 
   // const generateSKU = () => {
@@ -337,7 +339,7 @@ const AddProduct = () => {
                     type="file"
                     multiple
                     accept="image/*"
-                    onChange={handleImageUpload}
+                    // onChange={handleImageUpload}
                     className="hidden"
                     id="image-upload"
                   />

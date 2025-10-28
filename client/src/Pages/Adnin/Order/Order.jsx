@@ -21,9 +21,7 @@ const Order = () => {
   useEffect(() => {
     const getOrders = async () => {
       try {
-        const res = await axios.get(
-          'https://tech-bazar-iota.vercel.app/get-orders'
-        );
+        const res = await axios.get('https://rifi-bazar.vercel.app/get-orders');
         setOrders(res.data);
       } catch (error) {
         console.error('Error fetching orders:', error);

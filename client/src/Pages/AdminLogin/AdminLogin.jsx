@@ -12,7 +12,7 @@ const AdminLogin = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        'https://tech-bazar-iota.vercel.app/admin-login',
+        'https://rifi-bazar.vercel.app/admin-login',
         {
           email,
           password,

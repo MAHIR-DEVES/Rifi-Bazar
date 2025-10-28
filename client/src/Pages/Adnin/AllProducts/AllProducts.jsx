@@ -15,10 +15,8 @@ const AllProducts = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get(
-          'https://tech-bazar-iota.vercel.app/get-products'
-        );
-        setProducts(res.data);
+        const res = await axios.get('/get-products');
+        setProducts([]);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -88,9 +86,7 @@ const AllProducts = () => {
     }).then(async result => {
       if (result.isConfirmed) {
         try {
-          const res = await axios.delete(
-            `https://tech-bazar-iota.vercel.app/products/${id}`
-          );
+          const res = await axios.delete(`/products/${id}`);
 
           if (res.data.deletedCount > 0) {
             Swal.fire('Deleted!', 'Your product has been deleted.', 'success');

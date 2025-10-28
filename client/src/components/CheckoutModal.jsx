@@ -1,6 +1,6 @@
 // CheckoutModal.jsx
 import { useState } from 'react';
-import { FaArrowLeft, FaLock, FaPlus, FaMinus } from 'react-icons/fa';
+import { FaArrowLeft, FaLock } from 'react-icons/fa';
 import axios from 'axios';
 import SuccessModal from './Modal/SuccessModal';
 
@@ -16,22 +16,36 @@ function CheckoutModal({
 }) {
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const increaseQuantity = () => setQuantity(prev => prev + 1);
-  const decreaseQuantity = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+  // 🔹 Radio field select handler
+  const handleQuantityChange = e => {
+    setQuantity(Number(e.target.value));
+  };
 
-  // Handle form submit
+  // 🔹 Function to generate unique order ID
+  const generateOrderId = () => {
+    const datePart = new Date().toISOString().split('T')[0].replace(/-/g, '');
+    const randomPart = Math.random().toString(36).substring(2, 7).toUpperCase();
+    return `ORD-${datePart}-${randomPart}`;
+  };
+
+  // 🔹 Handle form submit
   const handleSubmitOrder = async e => {
     e.preventDefault();
 
+    const orderId = generateOrderId();
+    const finalQuantity = book?.combo ? 10 : quantity;
+
     const order = {
-      book: {
+      orderId, // unique order ID
+      product: {
         id: book.id,
         title: book.title,
         author: book.author,
         price: book.price,
         image: book.image,
       },
-      quantity,
+      combo: book.combo,
+      quantity: finalQuantity, // from radio button
       savings,
       totalPrice,
       customer: formData,
@@ -40,24 +54,22 @@ function CheckoutModal({
 
     try {
       const response = await axios.post('http://localhost:5000/orders', order);
-      console.log('API Response:', response.data);
+      console.log('✅ Order Submitted:', response.data);
 
-      // Show Success Modal
       setShowSuccess(true);
     } catch (error) {
-      console.error('API Error:', error);
+      console.error('❌ API Error:', error);
       alert('Failed to submit order. Please try again.');
     }
   };
 
   const handleSuccessClose = () => {
     setShowSuccess(false);
-    setShowCheckout(false); // Close Checkout modal after success
+    setShowCheckout(false);
   };
 
   return (
     <div className="max-w-7xl mx-auto md:px-2 md:py-12 relative">
-      {/* Checkout Modal */}
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header */}
         <div className="p-6 border-b border-gray-200">
@@ -99,31 +111,34 @@ function CheckoutModal({
               </div>
             </div>
 
-            {/* Quantity Selector */}
-            <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-700 font-semibold">Quantity</span>
-                <div className="flex items-center space-x-3">
-                  <button
-                    type="button"
-                    onClick={decreaseQuantity}
-                    className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors duration-200"
-                  >
-                    <FaMinus className="text-gray-600 text-xs" />
-                  </button>
-                  <span className="w-12 text-center font-bold text-lg text-gray-800">
-                    {quantity}Kg
-                  </span>
-                  <button
-                    type="button"
-                    onClick={increaseQuantity}
-                    className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors duration-200"
-                  >
-                    <FaPlus className="text-gray-600 text-xs" />
-                  </button>
+            {/* Quantity Selector (Radio Buttons) */}
+            {book?.combo === false && (
+              <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border border-gray-200">
+                <span className="block text-gray-700 font-semibold mb-2">
+                  Select Quantity
+                </span>
+                <div className="space-y-2">
+                  {[1, 2, 3].map(value => (
+                    <label
+                      key={value}
+                      className="flex items-center space-x-3 cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="quantity"
+                        value={value}
+                        checked={quantity === value}
+                        onChange={handleQuantityChange}
+                        className="form-radio text-indigo-600"
+                      />
+                      <span className="text-gray-800 font-medium">
+                        {value} Kg
+                      </span>
+                    </label>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Price Breakdown */}
             <div className="space-y-3 border-t border-gray-200 pt-4">
@@ -159,8 +174,7 @@ function CheckoutModal({
 
             <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
               <p className="text-sm text-blue-700 text-center">
-                📚 Buy {quantity} Kg {quantity > 1 ? 'ies' : ''} and get free
-                shipping!
+                📦 Buy {quantity} Kg and get free shipping!
               </p>
             </div>
           </div>
@@ -186,6 +200,7 @@ function CheckoutModal({
                   placeholder="Enter your full name"
                 />
               </div>
+
               {/* Email */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -201,6 +216,7 @@ function CheckoutModal({
                   placeholder="Enter your email"
                 />
               </div>
+
               {/* Phone */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -216,6 +232,7 @@ function CheckoutModal({
                   placeholder="Enter your phone number"
                 />
               </div>
+
               {/* Address */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -231,6 +248,7 @@ function CheckoutModal({
                   placeholder="Enter your complete shipping address"
                 />
               </div>
+
               {/* City & ZIP */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -285,7 +303,9 @@ function CheckoutModal({
       {/* Success Modal */}
       {showSuccess && (
         <SuccessModal
-          message={`Your order for ${quantity} Kg of "${book.title}" has been placed successfully!`}
+          message={`✅ Order placed successfully! Order ID: ${generateOrderId()} for ${quantity} Kg of "${
+            book.title
+          }".`}
           onClose={handleSuccessClose}
         />
       )}
