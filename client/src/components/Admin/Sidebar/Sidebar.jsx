@@ -111,12 +111,12 @@ const Sidebar = () => {
                 12
               </span>
             </div>
-            <div className="flex justify-between items-center">
+            {/* <div className="flex justify-between items-center">
               <span className="text-gray-300 text-sm font-medium">Revenue</span>
               <span className="text-white text-sm font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
                 $2,847
               </span>
-            </div>
+            </div> */}
             <div className="mt-3 pt-3 border-t border-gray-600">
               <div className="flex items-center text-xs text-gray-400">
                 <FaChartLine className="w-3 h-3 mr-1 text-green-400" />
