@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { FaSearch, FaTrash, FaEye, FaPlus, FaBox } from 'react-icons/fa';
-import ProductModal from '../../../Components/Modal/ViewModel';
 
 const AllProducts = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -250,11 +249,6 @@ const AllProducts = () => {
                       </button>
                     </div>
                   </td>
-                  <ProductModal
-                    isOpen={isModalOpen}
-                    onClose={handleCloseModal}
-                    product={selectedProduct}
-                  />
                 </tr>
               ))}
             </tbody>
