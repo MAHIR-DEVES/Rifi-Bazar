@@ -106,22 +106,29 @@ function CheckoutModal({
               </div>
               <div>
                 <p className="text-indigo-600 font-semibold text-lg">
-                  ৳ {book.price}
+                  {book.price} Tk
                 </p>
               </div>
             </div>
-
-            {/* Quantity Selector (Radio Buttons) */}
+            {/* Quantity Selector - Minimal */}
             {book?.combo === false && (
-              <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border border-gray-200">
-                <span className="block text-gray-700 font-semibold mb-2">
-                  Select Quantity
+              <div className=" rounded-lg  mb-6 ">
+                <span className="block text-gray-700 font-medium mb-3">
+                  Quantity
                 </span>
-                <div className="space-y-2">
+
+                <div className="flex gap-2">
                   {[1, 2, 3].map(value => (
                     <label
                       key={value}
-                      className="flex items-center space-x-3 cursor-pointer"
+                      className={`
+            flex-1 text-center py-3 px-4 rounded-md border cursor-pointer transition-colors
+            ${
+              quantity === value
+                ? 'border-blue-500 bg-blue-500 text-white'
+                : 'border-gray-300 text-gray-700 hover:border-gray-400'
+            }
+          `}
                     >
                       <input
                         type="radio"
@@ -129,11 +136,9 @@ function CheckoutModal({
                         value={value}
                         checked={quantity === value}
                         onChange={handleQuantityChange}
-                        className="form-radio text-indigo-600"
+                        className="hidden"
                       />
-                      <span className="text-gray-800 font-medium">
-                        {value} Kg
-                      </span>
+                      {value} Kg
                     </label>
                   ))}
                 </div>
@@ -144,7 +149,7 @@ function CheckoutModal({
             <div className="space-y-3 border-t border-gray-200 pt-4">
               <div className="flex justify-between">
                 <span className="text-gray-600">Unit Price</span>
-                <span className="font-semibold">৳ {book.price}</span>
+                <span className="font-semibold">{book.price} Tk</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Quantity</span>
@@ -152,7 +157,7 @@ function CheckoutModal({
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal</span>
-                <span className="font-semibold">৳ {totalPrice}</span>
+                <span className="font-semibold">{totalPrice} Tk</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Shipping</span>
@@ -162,13 +167,14 @@ function CheckoutModal({
                 <div className="flex justify-between">
                   <span className="text-gray-600">You Save</span>
                   <span className="font-semibold text-green-600">
-                    ৳ {savings}
+                    {savings}
+                    Tk{' '}
                   </span>
                 </div>
               )}
               <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-3">
                 <span>Total</span>
-                <span className="text-indigo-600">৳ {totalPrice}</span>
+                <span className="text-indigo-600">{totalPrice} Tk</span>
               </div>
             </div>
 
@@ -286,7 +292,7 @@ function CheckoutModal({
                 type="submit"
                 className="w-full bg-[#01662c] text-white py-4 rounded-lg font-semibold text-lg hover:bg-[#054923] transition duration-300 shadow-md hover:shadow-lg"
               >
-                Complete Order - ৳ {totalPrice}
+                Complete Order - {totalPrice} Tk
               </button>
 
               <div className="flex items-center justify-center space-x-2 text-gray-600">
