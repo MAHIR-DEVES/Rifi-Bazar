@@ -17,7 +17,6 @@ import {
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const [activeDropdown, setActiveDropdown] = useState(null);
   const location = useLocation();
 
   const menuItems = [
