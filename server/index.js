@@ -122,7 +122,7 @@ async function run() {
       }
     });
 
-    // Save order
+    // Save order in db
     app.post('/orders', async (req, res) => {
       try {
         const order = req.body;
